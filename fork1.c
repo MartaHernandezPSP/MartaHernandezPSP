@@ -7,81 +7,11 @@
 void main() 
 {
 
-    pid_t hijo,hijo1,nieto,pid;  
-
-    hijo = fork();
+    pid_t p2,p3,p4,pid;  
     
-  
-    if(hijo == 0)//hijo
-    {
-    	nieto = fork();
-
-	if(nieto == 0 )//nieto
-    	{
-    	  printf("Soy el nieto ");
-    	  
-    	  pid = getpid();
-    	  
-    	  if( pid%2 == 0)
-    	  {
-    	     printf("PID: %d y PPID: %d \n",pid, getppid());
-    	  }
-    	  else
-    	  {
-    	    printf("PID: %d \n",pid);
-    	  }
-    	  
-    	}
-    	else//hijo
-    	{
-    	  
-    	  printf("Soy el hijo1 ");
-    	   wait(NULL);
-    	   wait(NULL);
-    	   pid = getpid();
-    	  
-    	  if( pid%2 == 0)
-    	  {
-    	     printf("PID: %d y PPID: %d \n",pid, getppid());
-    	  }
-    	  else
-    	  {
-    	    printf("PID: %d \n",pid);
-    	  }
-    	
-    	}
-
-    	
-    }
-    else   //padre
-    {
-        wait(NULL);
-    	hijo1 = fork();
-    	    	
-    	if(hijo1 == 0 )//hijo1
-    	{
-    	   wait(NULL);
-    	   printf("Soy el hijo2 ");
-    	   pid = getpid();
-    	  
-    	  if( pid%2 == 0)
-    	  {
-    	     printf("PID: %d y PPID: %d \n",pid, getppid());
-    	  }
-    	  else
-    	  {
-    	    printf("PID: %d \n",pid);
-    	  }
-    	
-    	}
-    	else//padre
-    	{
-    	   wait(NULL);
-    	   wait(NULL);
-    	   wait(NULL);
-    	   pid = getpid();
+    pid = getpid();
     	   
-    	   printf("Soy el padre ");
+    	  printf("Soy el p1 ");
     	  
     	  if( pid%2 == 0)
     	  {
@@ -91,8 +21,78 @@ void main()
     	  {
     	    printf("PID: %d \n",pid);
     	  }
-    	
-    	}
-    }
+
+    p2 = fork();
+    
+	if(p2 == 0)//soy el p2
+	{
+		printf("Soy el p2 ");
+		pid = getpid();
+		
+		if( pid%2 == 0)
+    	  {
+    	     printf("PID: %d y PPID: %d \n",pid, getppid());
+    	  }
+    	  else
+    	  {
+    	    printf("PID: %d \n",pid);
+    	  }
+	
+	}
+	else//soy el p1
+	{
+		p3 = fork();
+		
+		if( p3 == 0)//soy el p3
+		{
+			printf("Soy el p3 ");
+				pid = getpid();
+			
+				if( pid%2 == 0)
+				  {
+					 printf("PID: %d y PPID: %d \n",pid, getppid());
+				  }
+				  else
+				  {
+					printf("PID: %d \n",pid);
+				  }
+				  
+			p4 = fork();
+			
+			if(p4 == 0)//soy el p4
+			{
+				printf("Soy el p4 ");
+				pid = getpid();
+				
+				if( pid%2 == 0)
+				  {
+					 printf("PID: %d y PPID: %d \n",pid, getppid());
+				  }
+				  else
+				  {
+					printf("PID: %d \n",pid);
+				  }
+			
+			
+			}
+			else//soy el p3
+			{
+				wait(NULL);
+				
+			}
+			
+		
+		}
+		else//soy el p1
+		{
+			wait(NULL);
+			wait(NULL);
+			
+		}
+		
+	}
+
+    
+
    exit(0);
 }
