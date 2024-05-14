@@ -1,0 +1,29 @@
+package HiloSumar;
+
+public class HiloArray implements Runnable
+{
+    private String nombrealumno;
+    private int array[];
+    
+    
+    public HiloArray (String nombrealumno, int array[])
+    {
+        this.nombrealumno = nombrealumno;
+        this.array = array;
+        
+    }
+     
+    //Punto de entrada del hilo
+    public void run()
+    {
+        SumarArray sumador = new SumarArray();
+        System.out.println("Hilo " + nombrealumno + " iniciando ...");
+        int resultado = sumador.Sumar(array);
+        System.out.println("La suma de los elementos para " + nombrealumno + " es: " + resultado);
+        System.out.println("Hilo " + nombrealumno + " terminando ...");
+        
+    }
+    
+    
+    
+}//class
