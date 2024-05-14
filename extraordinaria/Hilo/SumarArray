@@ -1,0 +1,26 @@
+package HiloSumar;
+
+
+public class SumarArray 
+{
+
+    int suma = 0;
+    
+    public int Sumar (int array[])
+    {        
+     for (int i = 0; i < array.length; i++) 
+        {
+            suma = suma + array[i];
+            
+        }//for
+     
+      try {
+            Thread.sleep(10); // Sleep for 10 milliseconds
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+     
+     return suma;
+    }
+    
+}//class
