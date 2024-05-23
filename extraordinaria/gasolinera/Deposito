@@ -1,0 +1,55 @@
+package Gasolinera;
+
+import java.util.Random;
+
+public class Deposito 
+{
+    private double gasolina;
+    private Random random = new Random();
+    private boolean lleno = false;
+    
+    //método realiza llenado depósito del camión    
+    public synchronized double llenarDepositoCamion()  
+    { 
+        while(!lleno)
+        {
+            try 
+            {
+                wait();
+            } 
+            catch (InterruptedException e) 
+            {
+                Thread.currentThread().interrupt();
+            }
+            
+        }
+        
+        lleno = false;
+        notify();
+        return gasolina;
+    } 
+ 
+    
+    //método productor llena el depósito 
+    public synchronized void prodLlenaDep(double litros)  
+    { 
+        while(lleno)
+        {
+            try 
+            {
+                wait();
+            } 
+            catch (InterruptedException e) 
+            {
+                Thread.currentThread().interrupt();
+            }
+        }
+        
+        gasolina = litros;
+        lleno = true;
+        System.out.println("Productor llenó el depósito con: " + litros + " litros.");
+        notify();
+    }
+    
+    
+}//clase
