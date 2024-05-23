@@ -1,0 +1,41 @@
+package Gasolinera;
+
+import java.util.Random;
+
+public class Productor extends Thread
+{
+    
+    private Deposito deposito;
+    private Random random = new Random();
+    private double litros;
+    
+    //Constructor clase productor 
+    public Productor(Deposito dep)  
+    { 
+        this.deposito = dep;
+        
+    } 
+ 
+    
+    public void run()  
+    { 
+        for (int i = 0; i < 15; i++) 
+        {
+            litros = random.nextInt(1001);
+            deposito.prodLlenaDep(litros);
+            
+            try 
+            {
+                sleep(100);
+            } 
+            catch (InterruptedException e) 
+            {
+                e.printStackTrace();
+            }
+            
+        }
+        
+    }
+
+    
+}//clase
