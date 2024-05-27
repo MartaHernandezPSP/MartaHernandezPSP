@@ -1,0 +1,80 @@
+package TCParrays;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Random;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Cliente 
+{
+
+    public static void main(String[] args) 
+    {
+        
+        String host="localhost";
+        int puerto=9877;
+        
+        Random random = new Random();
+        int array[] = new int[10];
+            
+        System.out.println("Generando Array de 10 posiciones ");
+            
+        // Generar números aleatorios y llenar el array
+        for (int i = 0; i < array.length; i++)
+        {
+            array[i] = random.nextInt(10)+1;
+        }        
+            
+        try {
+
+            Socket Cliente1 = new Socket(host,puerto);
+            System.out.println("Socket Cliente iniciado.");
+            
+            DataOutputStream out = new DataOutputStream(Cliente1.getOutputStream());
+            //pasamos el tamaño del array
+            out.writeInt(array.length);
+            
+            //pasamos los valores del array
+            for (int i = 0; i < array.length; i++)
+            {
+                out.writeInt(array[i]);
+            }
+            
+            out.flush();
+            
+            /**********************/
+            
+            //leer los resultados
+            DataInputStream in = new DataInputStream(Cliente1.getInputStream());
+
+            // Leer el tamaño del array 
+            int tamanoArray = in.readInt();
+            int resultados[] = new int[tamanoArray];
+
+            // Leer cada elemento del array
+            for (int i = 0; i < tamanoArray; i++) 
+            {
+                resultados[i] = in.readInt();
+            }//for
+            
+            System.out.println("Estos son los resultados: ");
+            System.out.println("Suma: "+resultados[0]);
+            System.out.println("Mayor: "+resultados[1]);
+            System.out.println("Menor: "+resultados[2]);
+            
+            Cliente1.close();
+            
+        } //main
+        catch (IOException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
+    }
+    
+}//clase
