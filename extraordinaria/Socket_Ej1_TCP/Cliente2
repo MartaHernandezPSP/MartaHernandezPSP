@@ -1,0 +1,54 @@
+package TCPfactorial;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Cliente2 
+{
+
+    public static void main(String[] args) 
+    {
+        String host="localhost";
+        int puerto=9876;
+        int factorial=1;
+        
+        try
+        {
+            Socket cliente2 = new Socket(host,puerto);
+            System.out.println("Cliente 2 conectado al servidor.");
+            System.out.println(" ");
+
+            // Recibir el número del servidor
+            DataInputStream in = new DataInputStream(cliente2.getInputStream());
+            int numeroRecibido = in.readInt();
+            System.out.println("Número recibido del servidor: " + numeroRecibido);
+            
+            //factorial
+            for(int i = 1;i <= numeroRecibido; i++)
+            {
+                factorial = factorial * i;                   
+            }
+            System.out.println("El factorial de " + numeroRecibido + " es: " + factorial);
+            
+            //enviar numero al servidor
+            DataOutputStream out = new DataOutputStream(cliente2.getOutputStream());
+            out.writeInt(factorial);
+            out.flush();
+            System.out.println(" ");
+            System.out.println("Número enviado a Servidor.\n");
+
+            cliente2.close(); // Cierre del socket del cliente 2
+            
+        }
+        catch(IOException excepcion) 
+        {
+            excepcion.printStackTrace();
+        }    
+                
+                
+    }//main
+    
+}//clase
