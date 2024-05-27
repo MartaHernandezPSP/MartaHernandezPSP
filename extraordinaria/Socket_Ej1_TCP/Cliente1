@@ -1,0 +1,49 @@
+package TCPfactorial;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Cliente1 
+{
+
+    public static void main(String[] args) 
+    {
+        String host="localhost";
+        int puerto=9876;
+        Scanner entrada = new Scanner(System.in);
+        int numero1;
+        
+        try
+        {
+            Socket Cliente1 = new Socket(host,puerto);
+            System.out.println("Inserta un numero \n");
+            numero1 = entrada.nextInt();
+            
+            DataOutputStream out = new DataOutputStream(Cliente1.getOutputStream());
+            out.writeInt(numero1);
+            out.flush();
+            
+            /*****************************/
+            
+            DataInputStream in = new DataInputStream(Cliente1.getInputStream());
+            int factorial = in.readInt();
+            System.out.println("Factorial recibido del servidor: " + factorial);
+
+            Cliente1.close(); //Cierre del socket   
+            
+        }
+        catch(IOException excepcion) 
+        {
+            excepcion.printStackTrace();
+        }    
+        
+        
+        
+        
+        
+    }//main
+    
+}//clase
