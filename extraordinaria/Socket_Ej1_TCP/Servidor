@@ -1,0 +1,71 @@
+package TCPfactorial;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Servidor 
+{
+
+    public static void main(String[] args) 
+    {
+        int puerto = 9876;
+        
+        
+        try 
+        {
+         
+            ServerSocket Servidor = new ServerSocket(puerto); //socket servidor 
+            System.out.println("Socket servidor");
+            System.out.println(" ");
+            Socket cliente1= Servidor.accept();
+            
+            // Recibir el número del cliente1
+            DataInputStream in = new DataInputStream(cliente1.getInputStream());//flujo entrada cliente1
+            int numeroRecibido = in.readInt();
+            System.out.println("Cliente 1 conectado");
+            System.out.println("Número recibido del cliente1: " + numeroRecibido);
+            System.out.println("Enviando numero a cliente2 \n");
+            
+            /***************************/
+            
+            // Enviar el número cliente2
+            Socket cliente2 = Servidor.accept();
+            DataOutputStream out = new DataOutputStream(cliente2.getOutputStream());//flujo salida a cliente2
+            out.writeInt(numeroRecibido);
+            out.flush();
+            System.out.println("Número enviado al Cliente 2");
+            
+            //recibir numero del cliente2
+            DataInputStream in2 = new DataInputStream(cliente2.getInputStream());//flujo entrada cliente2
+            int factorialRecibido = in2.readInt();
+            System.out.println(" ");
+            System.out.println("Cliente 2 conectado");
+            System.out.println("Factorial recibido " ); 
+            
+            /***************************/
+            
+            //enviar factorial al cliente1
+            DataOutputStream out1 = new DataOutputStream(cliente1.getOutputStream());//flujo salida a cliente1
+            out1.writeInt(factorialRecibido);
+            out1.flush();
+            System.out.println(" ");
+            System.out.println("Número enviado al Cliente 1 ");
+            
+            cliente1.close();
+            cliente2.close();
+            Servidor.close();
+            
+            
+        }
+        catch (IOException excepcion) 
+        {
+            excepcion.printStackTrace();
+        }
+        
+        
+    }//main
+    
+}//clase
