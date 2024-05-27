@@ -1,0 +1,89 @@
+package TCParrays;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Servidor 
+{
+
+    public static void main(String[] args) 
+    {
+        int puerto = 9877;
+        int array[] = new int[10];
+        
+        int mayor=0;
+        int menor=0;
+        int suma=0;
+        
+        try
+        {
+            ServerSocket Servidor = new ServerSocket(puerto); //socket servidor
+            System.out.println("Socket servidor iniciado");
+                
+            while(true)
+            {
+
+                Socket cliente = Servidor.accept();
+                System.out.println("Cliente conectado.");
+
+                DataInputStream in = new DataInputStream(cliente.getInputStream());
+
+                // Leer el tamaño del array 
+                int tamanoArray = in.readInt();
+                array = new int[tamanoArray];
+
+                // Leer cada elemento del array
+                for (int i = 0; i < tamanoArray; i++) 
+                {
+                    array[i] = in.readInt();
+                }//for
+                
+                for (int i = 0; i < array.length; i++) 
+                { 
+                    System.out.println(array[i]);
+                    suma += array[i];
+                    
+                    if (mayor < array[i]) 
+                    {
+                        mayor = array[i];
+                    }
+                    
+                    if (array[i] < menor) 
+                    {
+                        menor = array[i];
+                    }
+                }//for
+                
+                int[] resultados = {suma, mayor, menor};
+                
+                
+            //pasamos los resultados
+            DataOutputStream out = new DataOutputStream(cliente.getOutputStream());
+            //pasamos el tamaño del array
+            out.writeInt(resultados.length);
+            
+            //pasamos los valores del array
+            for (int i = 0; i < resultados.length; i++)
+            {
+                out.writeInt(resultados[i]);
+            }
+            
+            out.flush();
+                
+            }//while
+            
+            
+        }    
+        catch (IOException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+    }//main
+    
+}//clase
