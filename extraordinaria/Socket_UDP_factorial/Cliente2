@@ -1,0 +1,66 @@
+package UDPfactorial;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Cliente2 
+{
+
+    public static void main(String[] args) 
+    {
+        
+        try 
+        {
+            InetAddress direccion = InetAddress.getByName("localhost");
+            int puerto2 = 7655; // Mismo puerto que el servidor
+            int puerto1 = 7654;
+            
+            // Socket del cliente
+            DatagramSocket cliente2 = new DatagramSocket(puerto2);
+
+            byte[] buffer = new byte[1024];
+            System.out.println("Cliente 2");
+
+            // Recibir paquete del servidor
+            DatagramPacket entrada = new DatagramPacket(buffer, buffer.length);
+            cliente2.receive(entrada);
+
+            // Obtener el contenido del paquete
+            String respuesta = new String(entrada.getData()).trim(); // Eliminar espacios en blanco   
+            int numero = Integer.parseInt(respuesta);
+            System.out.println("Número recibido del servidor: " + numero);
+            
+            // Calcular factorial
+            int factorial = calcularFactorial(numero);
+            System.out.println("Factorial calculado: " + factorial);
+
+            // Convertir el factorial a cadena y ponerlo en el buffer
+            String factorialCadena = String.valueOf(factorial);
+            buffer = factorialCadena.getBytes();
+
+            // Enviar paquete al servidor
+            DatagramPacket salida = new DatagramPacket(buffer, buffer.length, direccion, puerto1);
+            System.out.println("Enviando resultado al servidor");
+            cliente2.send(salida);
+
+            cliente2.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Cliente2.class.getName()).log(Level.SEVERE, null, ex);
+        }        
+        
+    }//main
+    
+    private static int calcularFactorial(int numero) {
+        int factorial = 1;
+        for (int i = 1; i <= numero; i++) {
+            factorial *= i;
+        }
+        return factorial;
+    }
+
+    
+}//clase
