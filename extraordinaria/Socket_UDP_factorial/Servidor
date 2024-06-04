@@ -1,0 +1,73 @@
+package UDPfactorial;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Servidor 
+{
+
+    public static void main(String[] args) 
+    {
+        
+        try
+        {
+            
+            InetAddress direccion = InetAddress.getByName("localhost");
+            int puerto1 = 7654;
+            int puerto2 = 7655;
+
+            // Socket servidor
+            DatagramSocket servidor = new DatagramSocket(puerto1);
+            System.out.println("Servidor iniciado");
+
+            // Recibir número del cliente 1
+            byte[] buffer1 = new byte[1024];
+            
+            DatagramPacket entrada = new DatagramPacket(buffer1,buffer1.length);
+            servidor.receive(entrada);
+            
+            // Obtener el número del paquete recibido
+            String numeroStr = new String(entrada.getData(), 0, entrada.getLength());
+            int numeroCliente1 = Integer.parseInt(numeroStr);
+            System.out.println("Número del cliente 1 recibido: " + numeroCliente1);
+
+            // Enviar el número al cliente 2
+            DatagramPacket salida = new DatagramPacket(entrada.getData(), entrada.getLength(), direccion, puerto2);
+            servidor.send(salida);
+            System.out.println("Número enviado al cliente 2");
+            
+            /********************************************************/
+            
+            // Recibir número del cliente 2
+            DatagramPacket entradac2 = new DatagramPacket(buffer1, buffer1.length);
+            servidor.receive(entradac2);
+
+            // Obtener el número del paquete recibido del cliente 2
+            String numeroCliente2Str = new String(entradac2.getData(), 0, entradac2.getLength());
+            int numeroCliente2 = Integer.parseInt(numeroCliente2Str);
+            
+            System.out.println("Número del cliente 2 recibido: " + numeroCliente2);
+            byte[] buffer2 = numeroCliente2Str.getBytes();
+            int client1Port = entrada.getPort();
+
+            // Enviar el número del cliente 2 al cliente 1
+            DatagramPacket salidac1 = new DatagramPacket(buffer2, buffer2.length, entrada.getAddress(), client1Port);
+            servidor.send(salidac1);
+            System.out.println("Número del cliente 2 enviado al cliente 1");
+
+            // Cerrar el socket del servidor
+            servidor.close();
+
+        }          
+        catch(IOException ex) 
+        {
+            Logger.getLogger(Servidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+ 
+    }//main
+    
+}//clase
