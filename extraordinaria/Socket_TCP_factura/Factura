@@ -1,0 +1,76 @@
+package TCPfactura;
+
+import java.io.Serializable;
+
+public class Factura implements Serializable
+{
+    
+    String NumeroFactura ;
+    int importe;
+    String FechaFactura; 
+    String TipoIVA;
+    int IVA ;
+    double importeTotal;
+    
+    public Factura() {super();}
+
+    public Factura(String NumeroFactura, int importe, String FechaFactura, String TipoIVA, int IVA, double importeTotal) {
+        this.NumeroFactura = NumeroFactura;
+        this.importe = importe;
+        this.FechaFactura = FechaFactura;
+        this.TipoIVA = TipoIVA;
+        this.IVA = IVA;
+        this.importeTotal = importeTotal;
+    }
+
+    public String getNumeroFactura() {
+        return NumeroFactura;
+    }
+
+    public void setNumeroFactura(String NumeroFactura) {
+        this.NumeroFactura = NumeroFactura;
+    }
+
+    public int getImporte() {
+        return importe;
+    }
+
+    public void setImporte(int importe) {
+        this.importe = importe;
+    }
+
+    public String getFechaFactura() {
+        return FechaFactura;
+    }
+
+    public void setFechaFactura(String FechaFactura) {
+        this.FechaFactura = FechaFactura;
+    }
+
+    public String getTipoIVA() {
+        return TipoIVA;
+    }
+
+    public void setTipoIVA(String TipoIVA) {
+        this.TipoIVA = TipoIVA;
+    }
+
+    public int getIVA() {
+        return IVA;
+    }
+
+    public void setIVA(int IVA) {
+        this.IVA = IVA;
+    }
+
+    public double getImporteTotal() {
+        return importeTotal;
+    }
+
+    public void setImporteTotal(double importeTotal) {
+        this.importeTotal = importeTotal;
+    }
+    
+    
+    
+}//factura
