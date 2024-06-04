@@ -1,0 +1,98 @@
+package UDPfactura;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+public class Cliente 
+{
+
+    public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException 
+    {
+        try 
+        {
+            int puerto = 2999;
+            Scanner entrada = new Scanner(System.in);
+            // Socket servidor
+            DatagramSocket cliente = new DatagramSocket();
+            InetAddress direccion = InetAddress.getByName("localhost");   
+        
+            String NumeroFactura;
+            int importe;
+            String FechaFactura;
+            String TipoIVA;
+            int IVA = 0;
+            double importeTotal = 0;
+
+            System.out.println("Introduzca los datos de su factura:");
+
+            System.out.println("\nNúmero de su factura: ");
+            NumeroFactura = entrada.nextLine();
+
+            System.out.println("\nImporte:");
+            importe = entrada.nextInt();
+
+            // Limpiar el buffer del teclado después de leer un entero
+            entrada.nextLine();
+
+            System.out.println("\nFecha de su factura: ");
+            FechaFactura = entrada.nextLine();
+
+            System.out.println("\nEl tipo de IVA de su factura: ");
+            TipoIVA = entrada.nextLine();
+
+            Factura factura = new Factura(NumeroFactura, importe, FechaFactura, TipoIVA, IVA, importeTotal);
+            
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();// flujo de bytes de salida en memoria
+            ObjectOutputStream objectStream = new ObjectOutputStream(byteStream);// escribir objetos en un flujo de salida
+            objectStream.writeObject(factura);// Escribe el objeto en el flujo de salida.
+            
+            byte[] datosFactura = byteStream.toByteArray();// Convierte el contenido array en bytes.
+            
+            DatagramPacket paquete = new DatagramPacket(datosFactura, datosFactura.length, direccion, puerto);
+            System.out.println("Cliente mandando factura a servidor");
+            System.out.println(" ");
+
+            // Enviar el paquete
+            cliente.send(paquete);
+            
+            /********************************************************************/
+            
+            byte[] bufferRecibido = new byte[1024];
+            DatagramPacket paqueteRecibido = new DatagramPacket(bufferRecibido, bufferRecibido.length);
+            // Recibir el paquete del servidor
+            cliente.receive(paqueteRecibido);
+            
+            byte[] datosFacturaRecibidos = paqueteRecibido.getData();// meto el paquete en el array
+            ByteArrayInputStream byteStreamRecibido = new ByteArrayInputStream(datosFacturaRecibidos);//secuencia de entrada 
+            ObjectInputStream objectStreamRecibido = new ObjectInputStream(byteStreamRecibido);//lee objetos serializados de la secuencia de entrada.
+            //genera el objeto
+            Factura factura1 = (Factura) objectStreamRecibido.readObject();
+            
+            System.out.println("Factura recibida:");
+            System.out.println("Número de factura: " + factura1.getNumeroFactura());
+            System.out.println("Importe: " + factura1.getImporte());
+            System.out.println("Fecha: " + factura1.getFechaFactura());
+            System.out.println("Tipo de IVA: " + factura1.getTipoIVA());
+            System.out.println("IVA: " + factura1.getIVA());
+            System.out.println("Importe total: " + factura1.getImporteTotal());
+            
+            
+        }
+        catch (SocketException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//main
+    
+}//clase
