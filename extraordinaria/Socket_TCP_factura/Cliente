@@ -1,0 +1,64 @@
+package TCPfactura;
+
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Cliente 
+{
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException 
+    {
+        String host ="localhost";
+        int numeroPuerto = 4567; // Puerto del servidor
+        Scanner entrada = new Scanner(System.in);
+
+        // Crear el socket para conectarse al servidor
+        Socket servidor = new Socket(host, numeroPuerto);
+        
+        String NumeroFactura;
+        int importe;
+        String FechaFactura;
+        String TipoIVA;
+        int IVA = 0;
+        double importeTotal = 0;
+
+        System.out.println("Introduzca los datos de su factura:");
+
+        System.out.println("\nNúmero de su factura: ");
+        NumeroFactura = entrada.nextLine();
+
+        System.out.println("\nImporte:");
+        importe = entrada.nextInt();
+
+        // Limpiar el buffer del teclado después de leer un entero
+        entrada.nextLine();
+
+        System.out.println("\nFecha de su factura: ");
+        FechaFactura = entrada.nextLine();
+
+        System.out.println("\nEl tipo de IVA de su factura: ");
+        TipoIVA = entrada.nextLine();
+
+        Factura factura = new Factura(NumeroFactura, importe, FechaFactura, TipoIVA, IVA, importeTotal);
+        
+        ObjectOutputStream outObjeto = new ObjectOutputStream(servidor.getOutputStream());
+        
+        
+        // Recibir el objeto factura modificado desde el servidor
+        ObjectInputStream inObjeto = new ObjectInputStream(servidor.getInputStream());
+        Factura dato = (Factura) inObjeto.readObject();
+
+        System.out.println("");
+        System.out.println("Factura con número " + NumeroFactura + " ,Fecha " + FechaFactura + " e importe: " + importe);
+        System.out.println("Con tipo de IVA: " + TipoIVA);
+        System.out.println("Tiene un IVA del " + dato.getIVA() + "% y su importe total es " + dato.getImporteTotal());
+
+        // Cerrar los streams y el socket
+        outObjeto.close();
+        inObjeto.close();
+        servidor.close();
+    }
+}
